@@ -17,9 +17,13 @@
 import numpy as np
 from fractions import Fraction
 import random as rand
+#tip from adhd dev(me)
+#if task too heavy make it small then do that little piece
+#				:D
 class neural:
 	def __init__(self,active_function= lambda x: 1 / (1+np.exp(-x)) ):
 		self.active_function=active_function
+	#:O wow is that da neural!!!!!!!!!!!!!!!!!!!!!??????????????????
 	#simple active node calculation
 	#sum(input*weight)-bias
 	def active_node(self,inp,weight,bias=0):
@@ -40,7 +44,7 @@ class neural:
 			outcome.append(self.active_node(inp,w,b))
 		return outcome
 	#wow is that da neural network !!??
-	#just muti active node with many layer
+	#just muti active node with many layer and wiring them
 	def neural_network(self,inp,weight,bias):
 		register_input=inp
 		for w,b in zip(weight,bias):
