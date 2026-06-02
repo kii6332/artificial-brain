@@ -1,6 +1,8 @@
 # artificial-brain
 this peoject is improving ai to have its own thoght and emotion processing<br>
-**under develop**
+**under develop**<br>
+**didnt trained**<br>
+**forward-pass neural network**
 
 you can read my code<br>
 My code didnt bite you<br>
@@ -19,4 +21,5 @@ or not                            :(
 # note!!!!
 this still under develop
 and **isnt real AI right now**
+and **didnt have training stuff yet**
 just math engine may improve in future
