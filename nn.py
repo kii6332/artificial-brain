@@ -15,8 +15,6 @@
  # along with this program. If not, see <http://www.gnu.org/licenses/>.
  #
 import numpy as np
-from fractions import Fraction
-import random as rand
 #tip from adhd dev(me)
 #if task too heavy make it small then do that little piece
 #				:D
