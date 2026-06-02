@@ -1,4 +1,4 @@
-# 
+ # 
  # This file is part of the artifical-brain distribution
  # Copyright (c) 2026 kii_6332.
  # 
@@ -18,47 +18,86 @@ import numpy as np
 from fractions import Fraction
 import random as rand
 class neural:
-	def __init__(self,act_fun= lambda x: 1 / (1+np.exp(-x)) ):
-		self.act_fun=act_fun
+	def __init__(self,active_function= lambda x: 1 / (1+np.exp(-x)) ):
+		self.active_function=active_function
 		
-	def at_node(self,ip,we,ba=0):
-		wa=[]
-		if len(we) != len(ip):
-			raise ValueError(f"size of input != size of weight: {len(we)} != {len(ip)} | it have to be same\n more info:\n input:{ip}\n weight:{we}")
-		for i,w in zip(ip,we):
-			wa.append(i*w)
-		#print(wa)
-		at= sum(wa)-ba
-		#print(at)
-		return self.act_fun(at)
-	def multi_at_node(self,ip,we,ba):
-		op=[]
-		if len(ba) != len(we):
-			raise ValueError(f"size of weight != size of bias : {len(ba)} != {len(we)} | it have to be same\n more info:\n weight:{we}\n bias:{ba}")
-		for w,b in zip(we,ba):
-			op.append(self.at_node(ip,w,b))
-		return op
-	def neural_network(self,ip,we,ba):
-		p=ip
-		for w,b in zip(we,ba):
-			p=self.multi_at_node(p,w,b)
-		return p
+	def at_node(self,inp,weight,bias=0):
+		weight_array=[]
+		if len(weight) != len(inp):
+			raise ValueError(f"size of input != size of weight: {len(weight)} != {len(inp)} | it have to be same\n more info:\n input:{inp}\n weight:{weight}")
+		for i,w in zip(inp,weight):
+			weight_array.append(i*w)
+		at= sum(weight_array)-bias
+		return self.active_function(at)
+	def multi_at_node(self,inp,weight,bias):
+		outcome=[]
+		if len(bias) != len(weight):
+			raise ValueError(f"size of weight != size of bias : {len(bias)} != {len(weight)} | it have to be same\n more info:\n weight:{weight}\n bias:{bias}")
+		for w,b in zip(weight,bias):
+			outcome.append(self.at_node(inp,w,b))
+		return outcome
+	def neural_network(self,inp,weight,bias):
+		register_input=inp
+		for w,b in zip(weight,bias):
+			register_input=self.multi_at_node(register_input,w,b)
+		return register_input
 
-'''class neural_network:
-	def __init__(self,inp,hide,out,act_fun= lambda x: 1 / (1+np.exp(-x))):
-		self.inp=inp
-		self.hide=hide
-		self.out=out
-		nq=neural(act_fun=act_fun)
-		'''
-		
-nq=neural(act_fun=lambda x:x)
-a=[0,2,3,4,5]
-w=[
-[[2,3,4,5,6],[6,3,3,2,1]],
-[[1,3],[4,5]],
-[[1,3],[4,5],[1,2]]
-]
-b=[[10,15],[5,10],[2,1,100]]
-p=a
-print(nq.neural_network(a,w,b))
+#test stuff down here
+if __name__ == "__main__":
+	function_check=0
+	fail_function=[]
+	error_check=0
+	error_fail=[]
+	nq=neural(active_function=lambda x:x)
+	a=[0,2,3,4,5]
+	w=[
+	[[2,3,4,5,6],[6,3,3,2,1]],
+	[[1,3],[4,5]],
+	[[1,3],[4,5],[1,2]]
+	]
+	b=[[10,15],[5,10],[2,1,100]]
+	print("function test 1/3 \n")
+	try:
+		ot = nq.at_node(a,[2,3,4,5,6],3)
+		if ot == 65:
+			function_check +=1
+	except:
+		fail_function.append("at_node")
+	print("function test 2/3 \n")
+	try:
+		ot=nq.multi_at_node(a,[[2,3,4,5,6],[6,3,3,2,1]],[1,3])
+		if ot == [67, 25]:
+			function_check +=1
+	except:
+		fail_function.append("multi_at_node")
+	print("function test 3/3 \n")
+	try:
+		ot = nq.neural_network(a,w,b)
+		if ot == [951, 1802, 566]:
+			function_check +=1
+	except:
+		fail_function.append("neural_network")
+	w=[
+	[[2,3,4,5,6],[6,3,3,2,1]],
+	[[1,3],[4,5]],
+	[[1,3],[4,5],[1,2,1]]
+	]
+	print("error test 1/2 \n")
+	try:
+		ot=nq.neural_network(a,w,b)
+		error_fail.append("weight != input")
+	except:
+		error_check+=1
+	w=[
+	[[2,3,4,5,6],[6,3,3,2,1]],
+	[[1,3],[4,5]],
+	[[1,3],[4,5],[1,2]]
+	]
+	b=[[10,15],[5,10],[2,1,100,10]]
+	print("error test 2/2 \n")
+	try:
+		nq.neural_network(a,w,b)
+		error_fail.append("bias != weight")
+	except:
+		error_check+=1
+	print(f"summary:\n function test pass: {function_check}/3\n fail function: {fail_function}\nerror test pass: {error_check}/2\n fail error: {error_fail}")
