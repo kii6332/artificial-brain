@@ -20,8 +20,9 @@ import random as rand
 class neural:
 	def __init__(self,active_function= lambda x: 1 / (1+np.exp(-x)) ):
 		self.active_function=active_function
-		
-	def at_node(self,inp,weight,bias=0):
+	#simple active node calculation
+	#sum(input*weight)-bias
+	def active_node(self,inp,weight,bias=0):
 		weight_array=[]
 		if len(weight) != len(inp):
 			raise ValueError(f"size of input != size of weight: {len(weight)} != {len(inp)} | it have to be same\n more info:\n input:{inp}\n weight:{weight}")
@@ -29,17 +30,21 @@ class neural:
 			weight_array.append(i*w)
 		at= sum(weight_array)-bias
 		return self.active_function(at)
-	def multi_at_node(self,inp,weight,bias):
+	# :O many nodes
+	#just active node but for many output node in current layer
+	def multi_active_node(self,inp,weight,bias):
 		outcome=[]
 		if len(bias) != len(weight):
 			raise ValueError(f"size of weight != size of bias : {len(bias)} != {len(weight)} | it have to be same\n more info:\n weight:{weight}\n bias:{bias}")
 		for w,b in zip(weight,bias):
-			outcome.append(self.at_node(inp,w,b))
+			outcome.append(self.active_node(inp,w,b))
 		return outcome
+	#wow is that da neural network !!??
+	#just muti active node with many layer
 	def neural_network(self,inp,weight,bias):
 		register_input=inp
 		for w,b in zip(weight,bias):
-			register_input=self.multi_at_node(register_input,w,b)
+			register_input=self.multi_active_node(register_input,w,b)
 		return register_input
 
 #test stuff down here
@@ -58,30 +63,31 @@ if __name__ == "__main__":
 	b=[[10,15],[5,10],[2,1,100]]
 	print("function test 1/3 \n")
 	try:
-		ot = nq.at_node(a,[2,3,4,5,6],3)
+		ot = nq.active_node(a,[2,3,4,5,6],3)
 		if ot == 65:
 			function_check +=1
-	except:
-		fail_function.append("at_node")
+	except Exception:
+		fail_function.append("active_node")
 	print("function test 2/3 \n")
 	try:
-		ot=nq.multi_at_node(a,[[2,3,4,5,6],[6,3,3,2,1]],[1,3])
+		ot=nq.multi_active_node(a,[[2,3,4,5,6],[6,3,3,2,1]],[1,3])
 		if ot == [67, 25]:
 			function_check +=1
-	except:
-		fail_function.append("multi_at_node")
+	except Exception:
+		fail_function.append("multi_active_node")
 	print("function test 3/3 \n")
 	try:
 		ot = nq.neural_network(a,w,b)
 		if ot == [951, 1802, 566]:
 			function_check +=1
-	except:
+	except Exception:
 		fail_function.append("neural_network")
 	w=[
 	[[2,3,4,5,6],[6,3,3,2,1]],
 	[[1,3],[4,5]],
 	[[1,3],[4,5],[1,2,1]]
 	]
+	#error checking
 	print("error test 1/2 \n")
 	try:
 		ot=nq.neural_network(a,w,b)
