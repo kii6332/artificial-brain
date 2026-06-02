@@ -1,5 +1,5 @@
  # 
- # This file is part of the artifical-brain distribution
+ # This file is part of the artificial-brain distribution
  # Copyright (c) 2026 kii_6332.
  # 
  # This program is free software: you can redistribute it and/or modify  
@@ -92,7 +92,7 @@ if __name__ == "__main__":
 	try:
 		ot=nq.neural_network(a,w,b)
 		error_fail.append("weight != input")
-	except:
+	except ValueError:
 		error_check+=1
 	w=[
 	[[2,3,4,5,6],[6,3,3,2,1]],
@@ -104,6 +104,6 @@ if __name__ == "__main__":
 	try:
 		nq.neural_network(a,w,b)
 		error_fail.append("bias != weight")
-	except:
+	except ValueError:
 		error_check+=1
 	print(f"summary:\n function test pass: {function_check}/3\n fail function: {fail_function}\nerror test pass: {error_check}/2\n fail error: {error_fail}")
