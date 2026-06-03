@@ -17,11 +17,11 @@
 import nn
 import numpy as np
 class learn:
-	def __init__(self,weight,bias,active_function= lambda x: 1 / (1+np.exp(-x)) ):	#,learning_algrithm):
+	def __init__(self,weight,bias,active_function,learning_algrithm):
 		self.weight=weight
 		self.bias=bias
 		self.active_function=active_function
-		#self.learning_algrithm=learning_algrithm
+		self.learning_algrithm=learning_algrithm
 		if len(self.bias) != len(self.weight):
 			raise ValueError(f"size of weight != size of bias : {len(self.bias)} != {len(self.weight)} | it have to be same\n more info:\n weight:{self.weight}\n bias:{self.bias}")
 		self.na=nn.neural(self.active_function)
@@ -32,6 +32,14 @@ class learn:
 		for t,p in zip(target,self.process(inp)):
 			register_output.append(t-p)
 		return register_output
+	def tune(self,inp,target):
+		output=self.process(inp)
+		error=self.error_calculation(inp,target)
+		return self.learning_algrithm(weight=self.weight,bias=self.bias,error=error,output=output)
+	def evo(self,inp,target):
+		apply_value = self.tune(inp,target)
+		self.weight = apply_value["weight"]
+		self.bias = apply_value["bias"]
 #print(type(f))
 a=[0,2,3,4,5]
 w=[
@@ -40,5 +48,9 @@ w=[
 [[1,3],[4,5],[1,2]]
 ]
 b=[[10,15],[5,10],[2,1,100]]
-lr=learn(w,b,lambda x:x)
-print(lr.error_calculation(a,[950, 1800, 500]))
+def ga(error,weight,bias,output):
+	return {"weight": weight, "bias": bias}
+lr=learn(w,b,lambda x:x,ga)
+print(lr.weight)
+lr.evo(a,[950, 1800, 500])
+print(lr.weight)
