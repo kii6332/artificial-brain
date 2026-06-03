@@ -15,6 +15,7 @@
  # along with this program. If not, see <http://www.gnu.org/licenses/>.
  #
 import numpy as np
+import torch as th
 #tip from adhd dev(me)
 #if task too heavy make it small then do that little piece
 #				:D
@@ -38,9 +39,10 @@ class neural:
 		outcome=[]
 		if len(bias) != len(weight):
 			raise ValueError(f"size of weight != size of bias : {len(bias)} != {len(weight)} | it have to be same\n more info:\n weight:{weight}\n bias:{bias}")
-		for w,b in zip(weight,bias):
-			outcome.append(self.active_node(inp,w,b))
-		return outcome
+		inp=np.array(inp)
+		weight=np.array(weight)
+		bias=np.array(bias)
+		return self.active_function(inp @ weight.T -bias)
 	#wow is that da neural network !!??
 	#just muti active node with many layer and wiring them
 	def neural_network(self,inp,weight,bias):
@@ -48,6 +50,10 @@ class neural:
 		for w,b in zip(weight,bias):
 			register_input=self.multi_active_node(register_input,w,b)
 		return register_input
+		'''inp=np.array(inp)
+		weight=np.array(weight)
+		bias=np.array(bias)
+		return self.active_function(inp @ weight.T +bias)'''
 
 #test stuff down here
 if __name__ == "__main__":
@@ -72,14 +78,14 @@ if __name__ == "__main__":
 		fail_function.append("active_node")
 	print("function test 2/3 \n")
 	try:
-		ot=nq.multi_active_node(a,[[2,3,4,5,6],[6,3,3,2,1]],[1,3])
+		ot=list(nq.multi_active_node(a,[[2,3,4,5,6],[6,3,3,2,1]],[1,3]))
 		if ot == [67, 25]:
 			function_check +=1
 	except Exception:
 		fail_function.append("multi_active_node")
 	print("function test 3/3 \n")
 	try:
-		ot = nq.neural_network(a,w,b)
+		ot = list(nq.neural_network(a,w,b))
 		if ot == [951, 1802, 566]:
 			function_check +=1
 	except Exception:
