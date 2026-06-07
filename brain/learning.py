@@ -17,7 +17,7 @@
 import nn
 import numpy as np
 class learn:
-	def __init__(self,weight,bias,active_function,learning_algrithm):
+	def __init__(self,weight= None,bias= None,active_function= lambda x: 1 / (1+np.exp(-x)),learning_algrithm= None):
 		self.weight=weight
 		self.bias=bias
 		self.active_function=active_function
@@ -37,18 +37,27 @@ class learn:
 		apply_value = self.tune(inp,target)
 		self.weight = apply_value["weight"]
 		self.bias = apply_value["bias"]
-'''print(type(f))
-a=[0,2,3,4,5]
-w=[
-[[2,3,4,5,6],[6,3,3,2,1]],
-[[1,3],[4,5]],
-[[1,3],[4,5],[1,2]]
-]
-b=[[10,15],[5,10],[2,1,100]]
-def ga(error,weight,bias,output):
-	bias[-1]=np.array(error)-np.array(bias[-1])
-	return {"weight": weight, "bias": bias}
-lr=learn(w,b,lambda x:x,ga)
-print(lr.bias)
-lr.evo(a,[950, 1800, 500])
-print(lr.bias)'''
+if __name__ == "__main__": 
+	a=[0,2,3,4,5]
+	w=[
+	[[2,3,4,5,6],[6,3,3,2,1]],
+	[[1,3],[4,5]],
+	[[1,3],[4,5],[1,2]]
+	]
+	b=[[10,15],[5,10],[2,1,100]]
+	def ga(error,weight,bias,output):
+		bias[-1]=np.array(error)+np.array(bias[-1])
+		return {"weight": weight, "bias": bias}
+	lr=learn(w,b,lambda x:x,ga)
+	print(ga)
+	print(lr.bias)
+	print(lr.process(a))
+	lr.evo(a,[950, 1800, 500])
+	print(lr.bias)
+	print(lr.process(a))
+	lr.evo(a,[950, 1800, 500])
+	print(lr.bias)
+	print(lr.process(a))
+	lr.evo(a,[950, 1800, 500])
+	print(lr.bias)
+	print(lr.process(a))
